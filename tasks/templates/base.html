@@ -1,0 +1,52 @@
+<html>
+    <head>
+        {% load staticfiles %}
+        <title>TasksApp</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+              integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+        <style>
+            a:hover{
+                text-decoration: none !important;
+            }
+            .nav-tabs{
+                border-bottom:none !important;
+            }
+            {% block styling %}{% endblock%}
+        </style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <h3><a href="{% url 'tasks:index' %}" class="">Taskapp</a></h3>
+                </div>
+                    <ul class="nav nav-tabs navbar-right">
+                        <li>
+                            <form method="POST" class="navbar-form" id="search" action="{% url 'tasks:search' %}">
+                                {% csrf_token %}
+                                <input type="text" class="form-control" placeholder="Search..." id="search_box" name="query">
+                            </form>
+                        </li>
+                        {% if user.is_active %}
+                            <li><a href="/admin/">{{ user.username }}</a></li>
+                            <li><a href="{% url 'authlogout' %}">logout</a></li>
+                        {% else %}
+                            <li><a href="{% url 'authlogin' %}">login</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+        </nav>
+        <div class="Container">
+            <div class="row">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+        {% block scripts %}{% endblock %}
+    </body>
+</html>

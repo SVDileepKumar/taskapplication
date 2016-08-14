@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <h3>TASK LIST</h3>
+    <div class="col-sm-11" style="margin-left: -15px">
+        <h3>{{ tasklist.name }}</h3>
+    </div>
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default glyphicon glyphicon-edit pull-right" id="addtasklist"
+                data-toggle="modal" data-target="#AddTaskListModal"> Edit </button>
+        <button type="button" class="btn btn-default glyphicon glyphicon-plus pull-right" id="addusersmodal"
+                data-toggle="modal" data-target="#AddUserModal">Add Users</button>
+    </span>
+    <br >
+    <br >
+    {% if usersshared %}
+        <div>Associated Users:
+            {% for user in  usersshared %}
+                {{ user.user.username }}
+            {% endfor %}
+
+        </div>
+    {% endif %}
+    <div><b>Description:</b>
+        <div class="well">{{ tasklist.description }}</div>
+    </div>
+    <div><b>Notes:</b>
+        <div class="well">{{ tasklist.notes }}</div>
+    </div>
+
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <td>Taskname</td>
+                <td>Progress</td>
+                <td>Start Date</td>
+                <td>End Date</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{% url 'tasks:taskview' task.id %}">{{ task.name }}</a></td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{ task.completion_status }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ task.completion_status }}%">
+                            <span class="sr-only">{{ task.completion_status }}% Complete (success)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.end_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        {% for task in tasks %}
+
+        {% endfor %}
+    </table>
+    {% include 'tasks/tasklistform_modal.html' %}
+    {% include 'tasks/adduserform_modal.html' %}
+
+{% endblock %}

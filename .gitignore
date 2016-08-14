@@ -1,0 +1,7 @@
+env
+.idea/
+*.pyc
+tasks/*.pyc
+tasks/*.pyc
+tasks/migrations
+db.sqlite3

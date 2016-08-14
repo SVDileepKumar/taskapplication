@@ -1,0 +1,37 @@
+<div class="modal fade" id="AddSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="AddSubTaskLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="AddSubTaskLabel">Add Sub Task</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'tasks:addsubtask' %}" method="post" class="form-horizontal subtaskform">
+                    {% csrf_token %}
+                    {{ subtaskform }}
+                    <label for="startdate">Start Date:</label>
+                    <input type="date" class="form-control" id="startdate" placeholder="Start Date" name="start_date"
+                           value="{{ task.start_date|date:"Y-m-d" }}">
+                    <label for="enddate">End Date:</label>
+                    <input type="date" class="form-control" id="enddate" placeholder="End Date" name="end_date"
+                           value="{{ task.end_date|date:"Y-m-d" }}">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="createsubtask">Create Sub Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#add_subtasks').click(function () {
+        $('form.subtaskform').append('<input type="hidden" name="parentid" value="{{ task.id }}">');
+        $('form.subtaskform').append('<input type="hidden" name="tasklist_id" value="{{ task.tasklist_id.id }}">');
+    });
+    $('#createsubtask').click(function () {
+        $('form.subtaskform')[0].submit();
+    });
+</script>

@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    {% if task.parent_id == None %}
+        <h3>TASK </h3>
+    {% else %}
+        <h3>SUB TASK </h3>
+    {% endif %}
+    <div class="col-sm-11">
+        <h4 style="margin-left:-15px;"> {{ task.name }}</h4>
+    </div>
+
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-default glyphicon glyphicon-edit pull-left" id="addtask"
+                data-toggle="modal" data-target="#AddTaskModal" style="white-space: nowrap;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 0px 7px;
+    border-radius: 20px;"> Edit</button>
+    </span>
+    <br />
+    {% if task.parent_id == None %}
+        <div id="add_subtasks" data-toggle="modal" data-target="#AddSubTaskModal" style="float:right;
+    color:rgb(255,255,255);
+    background-color: rgba(32, 141, 244, 0.8);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 0px 7px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    padding: 0px 9px;cursor:pointer;">Add Sub Tasks
+        </div>
+        <div id="subtasks" style="float:right;
+    color:rgb(255,255,255);
+    background-color: rgba(32, 141, 244, 0.8);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-align: center;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    margin: 0px 7px;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+    padding: 0px 9px;cursor:pointer;"> View Sub Tasks
+        </div>
+    {% endif %}
+
+    <br/>
+    <br/>
+    <div class="well" style="display: None" id="subtasksdiv">
+        <strong>SubTasks:</strong>
+        <ul>
+            {% for subtask in subtasks %}
+                <li><a href="{% url 'tasks:taskview' subtask.id %}">{{ subtask.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <p><b>Tasklist:</b> <a href="{% url 'tasks:tasklistview' task.tasklist_id %}"> <strong
+            style="color:#286090">{{ task.tasklist_id.name }}</strong></a></p>
+    {% if task.parent_id != None %}
+        <p><b>ParentTask:</b> <a href="{% url 'tasks:taskview' task.parent_id %}"> <strong
+                style="color:#286090">{{ parent.name }}</strong></a></p>
+    {% endif %}
+
+    <b>Progress:</b>
+    <div class="progress">
+      <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="{{ task.completion_status }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ task.completion_status }}%">
+        <span class="sr-only">{{ task.completion_status }}% Complete (success)</span>
+      </div>
+    </div>
+    <div><b>Description:</b>
+        <div class="well">{{ task.description }}</div>
+    </div>
+    <p><b>Start Date:</b>{{ task.start_date }}</p>
+    <p><b>End Date:</b>{{ task.end_date }}</p>
+    <div>
+        <b>Comments:</b>
+        <div class="well">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="col-sm-11">
+                    {{ commentform }}
+                </div>
+                <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default glyphicon glyphicon-comment pull-left"></button>
+                </span>
+            </form>
+            <ul>
+                {% for comment in comments %}
+                    <li>{{ comment }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% include 'tasks/taskform_modal.html' %}
+    {% include 'tasks/subtaskform_modal.html' %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('#subtasks').click(function () {
+            $('div#subtasksdiv').toggle();
+        });
+        function csrfSafeMethod(method) {
+            // these HTTP methods do not require CSRF protection
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+
+        }
+        var csrftoken = getCookie('csrftoken');
+        {#        jQuery('#createsubtask').click(function(){#}
+        {#            console.log({{ task }});#}
+        {#            url="{% url 'tasks:addsubtask' %}";#}
+        {##}
+        {#            ddata="X-CSRFToken="+csrftoken+"&task_id={{ task }}&tasklist_id={{ task.tasklist_id }}";#}
+        {#           jQuery.ajax({#}
+        {#              dataType :"html",#}
+        {#               url:url,#}
+        {#               data:ddata,#}
+        {#               type:"POST",#}
+        {##}
+        {#               beforeSend: function (xhr, settings) {#}
+        {#                   if (!csrfSafeMethod(settings.type) && !this.crossDomain) {#}
+        {#                       xhr.setRequestHeader("X-CSRFToken", csrftoken);#}
+        {#                   }#}
+        {#                   $('#createsubtask').click(function(){#}
+        {#                             $('form.subtaskform')[0].submit();#}
+        {#                   });#}
+        {#               },#}
+        {##}
+        {##}
+        {##}
+        {#               success: function (data) {#}
+        {##}
+        {#                    console.log('Success');#}
+        {#               }#}
+        {##}
+        {#           });#}
+        {#        });#}
+    </script>
+{% endblock %}

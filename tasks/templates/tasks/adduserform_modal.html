@@ -1,0 +1,36 @@
+<div class="modal fade" id="AddUserModal" tabindex="-1" role="dialog" aria-labelledby="AddUserLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="AddUserLabel">Add Task</h4>
+            </div>
+            <div class="modal-body">
+                <form method="post" class="form-horizontal adduserform">
+                    {% csrf_token %}
+                    <label for="adduser">Add User:</label>
+                    <select class="form-control" id="adduser" name="adduser" multiple>
+                        {% for user in users %}
+                            <option value="{{ user.user.id }}">{{ user.user.username }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="addusers">Add  Users</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#addusersmodal').click(function () {
+        $('form.adduserform').append('<input type="hidden" name="tasklist_id" value="{{ tasklist.id }}">');
+        $('form.adduserform').append('<input type="hidden" name="formname" value="addusers">');
+    });
+    $('#addusers').click(function () {
+        $('form.adduserform')[0].submit();
+    });
+</script>

@@ -1,0 +1,12 @@
+{%  extends 'base.html' %}
+{%  load staticfiles %}
+{% block %}
+    {% if msg %}
+        {{ msg }}
+    {% endif %}
+{% for subtask in subtasks %}
+    <div>
+        {{ subtask.taskname }}
+    </div>
+{% endfor %}
+{% endblock %}

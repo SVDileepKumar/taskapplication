@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+<h3>Search Results for '{{ query }}'</h3>
+    {% if tasklists_number != 0 %}
+        <div>
+            <h4>Tasklists</h4>
+            <ul>
+                {% for tasklist in tasklists %}
+                    <li>{{ tasklist.name }}</li>
+                {% endfor %}
+                {% for tasklist in tasklists_description %}
+                    <li>{{ tasklist.name }}
+                        <div class="well">{{ tasklist.description }}</div>
+                    </li>
+                {% endfor %}
+                {% for tasklist in tasklists_notes %}
+                    <li>{{ tasklist.name }}
+                        <div class="well">{{ tasklist.notes }}</div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if tasks_number != 0 %}
+        <div>
+            <h4>Tasks:</h4>
+            <ul>
+                {% for task in tasks %}
+                    <li><a href="{% url 'tasks:taskview' task.id %}">{{task}}</a></li>
+                {% endfor %}
+                {% for task in tasks_description %}
+                    <li><a href="{% url 'tasks:taskview' task.id %}">{{task}}</a>
+                        <div class="well">{{ task.description }}</div>
+                    </li>
+                {% endfor %}
+                {% for task in tasks_comments %}
+                    <li><a href="{% url 'tasks:taskview' task.id %}">{{task}}</a>
+                        {% for comment in comments %}
+                            <ul>
+                                {% if comment.task_id.id == task.id %}
+                                    <li>{{ comment.comment }}</li>
+                                {% endif %}
+                            </ul>
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% if tasklists_number == 0 and tasks_number == 0 %}
+        <p>No Results matching Your Query</p>
+    {% endif %}
+
+{% endblock %}

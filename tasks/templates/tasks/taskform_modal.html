@@ -1,0 +1,63 @@
+<div class="modal fade" id="AddTaskModal" tabindex="-1" role="dialog" aria-labelledby="AddTaskLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="AddTaskLabel">Add Task</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" class="form-horizontal taskform">
+            {% csrf_token %}
+            {{ taskform }}
+            <label for="startdate">Start Date:</label>
+            <input type="date" class="form-control" id="startdate" placeholder="Start Date"  name="start_date" value="{{task.start_date|date:"Y-m-d" }}">
+            <label for="enddate">End Date:</label>
+            <input type="date" class="form-control" id="enddate" placeholder="End Date" name="end_date" value="{{ task.end_date|date:"Y-m-d" }}">
+            <label for="Tasklist">Tasklist:</label>
+            <select class="form-control" id="Tasklist" name="tasklist_id" >
+                <option disabled selected value=" "> -- select an option -- </option>
+                {% for tasklist in tasklists %}
+                    <option value="{{ tasklist.id }}">{{tasklist.name}}</option>
+                {% endfor %}
+            </select>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="createtask">Create Task</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if task.id %}
+    <script>
+        jQuery('#Tasklist').find('[value={{task.tasklist_id}}]').attr("selected", true);
+    </script>
+{% endif %}
+{% if  task.start_date == None %}
+    <script>
+        Date.prototype.toDateInputValue = (function () {
+            var local = new Date(this);
+            local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+            return local.toJSON().slice(0, 10);
+        });
+        $('#startdate').val(new Date().toDateInputValue());
+        $('#enddate').val(new Date().toDateInputValue());
+        /*var date=new Date();
+         datestring=date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate();
+         jQuery('#startdate').attr('value',date);
+         jQuery('#enddate').attr('value',date);
+         */
+    </script>
+
+{% endif %}
+
+<script>
+    $('#addtask').click(function(){
+        $('form.taskform').append('<input type="hidden" name="formname" value="task">');
+    });
+    $('#createtask').click(function(){
+        $('form.taskform')[0].submit();
+    });
+</script>

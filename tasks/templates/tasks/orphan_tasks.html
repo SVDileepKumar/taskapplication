@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+    <div class="col-sm-11">
+        <h3>Orphan Tasks</h3>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <td>Taskname</td>
+            <td>Progress</td>
+            <td>Start Date</td>
+            <td>End Date</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in tasks %}
+            <tr>
+                <td><a href="{% url 'tasks:taskview' task.id %}">{{ task.name }}</a></td>
+                <td>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                             aria-valuenow="{{ task.completion_status }}" aria-valuemin="0" aria-valuemax="100"
+                             style="width: {{ task.completion_status }}%">
+                            <span class="sr-only">{{ task.completion_status }}% Complete (success)</span>
+                        </div>
+                    </div>
+                </td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.end_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        {% for task in tasks %}
+
+        {% endfor %}
+    </table>
+    {% include 'tasks/tasklistform_modal.html' %}
+{% endblock %}

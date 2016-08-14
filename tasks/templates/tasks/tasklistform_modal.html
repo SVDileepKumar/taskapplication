@@ -1,0 +1,30 @@
+<div class="modal fade" id="AddTaskListModal" tabindex="-1" role="dialog" aria-labelledby="AddTaskListLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="AddTaskListLabel">Add Tasklist</h4>
+      </div>
+      <div class="modal-body">
+        <form action="" method="post" class="form-horizontal tasklistform">
+            {% csrf_token %}
+            {{ tasklistform }}
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="createtasklist">Create TaskList</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $('#addtasklist').click(function(){
+        $('form.tasklistform').append('<input type="hidden" name="formname" value="tasklist">');
+    });
+    $('#createtasklist').click(function(){
+        $('form.tasklistform')[0].submit();
+    });
+</script>

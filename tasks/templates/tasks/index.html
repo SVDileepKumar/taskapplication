@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+  {% if tasklistform.errors %}
+    <p class="error">Sorry, that's not a valid data in Form</p>
+  {% endif %}
+  {% if taskform.errors %}
+    <p class="error">Sorry, that's not a valid data in Form</p>
+  {% endif %}
+
+    <div>
+        <button type="button" class="btn btn-primary" id="addtasklist" data-toggle="modal" data-target="#AddTaskListModal" >Add TaskList</button>
+        <button type="button" class="btn btn-primary" id="addtask" data-toggle="modal" data-target="#AddTaskModal" >Add Task</button>
+    </div>
+    <div class='col-md-12' style="margin-top: 10px;">
+        <a style="
+    color: #4617f5;
+    font-size: 16px;
+    font-family: monospace;
+" href="{% url 'tasks:tasklistview' 0 %}">Orphaned Tasks</a>
+    </div>
+    <table>
+        <tbody>
+        {% for orphan_task in orphan_tasks %}
+            <tr>
+                <td>
+                    <div style="margin-left: 40px;" class="col-md-6 col-md-offset-1">
+                        <a style="
+    min-width: 1000px;
+    margin-left: 40px;
+    max-width: 10000px;
+" href="{% url 'tasks:taskview' orphan_task.id %}">{{ orphan_task.name }}</a></div>
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <br>
+
+    {% for tasklist in tasklists %}
+        <div class='col-md-12'>
+            <a style="
+    color: #a02ad8;
+    font-size: 16px;
+    font-family: monospace;
+" href="{% url 'tasks:tasklistview' tasklist.id %}">{{ tasklist.name }}</a>
+        </div>
+
+        {% for task in all_tasks %}
+            <table>
+            <tbody>
+
+            {% if task.tasklist_id == tasklist %}
+                <tr>
+                    <td>
+                        <div class="col-md-20 col-md--1"
+                             style="font-size: 16px;font-family: monospace;margin-left: 95px">
+                            <a href="{% url 'tasks:taskview' task.id %}">{{ task.name }}</a></div>
+                    </td>
+                </tr>
+            {% endif %}
+
+
+        {% endfor %}
+    </tbody>
+    </table>
+        <br>
+    {%endfor%}
+
+
+    {% include 'tasks/taskform_modal.html' %}
+    {% include 'tasks/tasklistform_modal.html' %}
+
+
+{% endblock%}
+
